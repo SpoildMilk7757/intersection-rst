@@ -35,7 +35,6 @@ input.onButtonPressed(Button.A, function () {
         YELLOW()
         basic.pause(4000)
         RED()
-        xyz = 1
     }
 })
 function RED () {
@@ -133,7 +132,7 @@ let Pedestrian_Crossing_Time = 0
 let xyz = 0
 xyz = 1
 Pedestrian_Crossing_Time = 15
-Strip = neopixel.create(DigitalPin.P16, 3, NeoPixelMode.RGB)
+Strip = neopixel.create(DigitalPin.P1, 3, NeoPixelMode.RGB)
 Strip.setBrightness(20)
 radio.setGroup(177)
 basic.showIcon(IconNames.No)
@@ -145,8 +144,11 @@ basic.forever(function () {
     control.waitMicros(10)
     pins.digitalWritePin(DigitalPin.P1, 0)
     Distance = pins.pulseIn(DigitalPin.P2, PulseValue.High) / 58
-    basic.pause(2000)
     if (Distance > 4 && Distance < 6) {
         Vehicle()
+    }
+    if (input.buttonIsPressed(Button.A)) {
+        basic.pause(48000)
+        xyz = 1
     }
 })
