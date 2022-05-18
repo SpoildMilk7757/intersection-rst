@@ -1,29 +1,39 @@
 function Pedestrian_Crossing () {
-    basic.showLeds(`
-        . . # . .
-        . # # # .
-        # . # . #
-        . # . # .
-        # . . . #
-        `)
-    basic.pause(1000)
-    for (let index = 0; index < 15; index++) {
-        basic.showNumber(Pedestrian_Crossing_Time)
-        Pedestrian_Crossing_Time += -1
+    if (xyz == 0) {
+        basic.showLeds(`
+            . . # . .
+            . # # # .
+            # . # . #
+            . # . # .
+            # . . . #
+            `)
+        basic.pause(1000)
+        for (let index = 0; index < 9; index++) {
+            if (xyz == 0) {
+                basic.showNumber(Pedestrian_Crossing_Time)
+                Pedestrian_Crossing_Time += -1
+            }
+        }
+        Pedestrian_Crossing_Time = 9
+        basic.showLeds(`
+            # . . . #
+            . # . # .
+            . . # . .
+            . # . # .
+            # . . . #
+            `)
+        if (xyz == 0) {
+            YELLOW()
+            basic.pause(3000)
+            RED()
+        }
     }
-    Pedestrian_Crossing_Time = 15
-    basic.showLeds(`
-        # . . . #
-        . # . # .
-        . . # . .
-        . # . # .
-        # . . . #
-        `)
 }
 radio.onReceivedNumber(function (receivedNumber) {
-    if (receivedNumber == 7) {
-        Ambulance()
-    }
+    Random = receivedNumber
+    xyz = 1
+    Ambulance()
+    xyz = 0
 })
 function Sonar () {
     pins.digitalWritePin(DigitalPin.P1, 0)
@@ -42,27 +52,31 @@ function RED () {
     range.showColor(neopixel.colors(NeoPixelColors.Black))
 }
 function Ambulance () {
-    basic.showLeds(`
-        # . . . #
-        . # . # .
-        . . # . .
-        . # . # .
-        # . . . #
-        `)
-    basic.pause(2000)
+    basic.pause(500)
     GREEN()
     basic.pause(10000)
     YELLOW()
-    basic.pause(4000)
+    basic.pause(3000)
     RED()
 }
 function Vehicle () {
-    basic.showIcon(IconNames.No)
-    GREEN()
-    basic.pause(15000)
-    YELLOW()
-    basic.pause(3000)
-    RED()
+    if (xyz == 0) {
+        basic.showIcon(IconNames.No)
+        GREEN()
+        for (let index = 0; index < 20; index++) {
+            if (xyz == 0) {
+                basic.pause(500)
+            }
+        }
+        YELLOW()
+        basic.pause(1000)
+        for (let index = 0; index < 6; index++) {
+            if (xyz == 0) {
+                basic.pause(500)
+            }
+        }
+        RED()
+    }
 }
 function GREEN () {
     range = Strip.range(0, 1)
@@ -73,29 +87,38 @@ function GREEN () {
     range.showColor(neopixel.colors(NeoPixelColors.Green))
 }
 function Pedestrian_Crossing_VI () {
-    basic.showLeds(`
-        . . # . .
-        . # # # .
-        # . # . #
-        . # . # .
-        # . . . #
-        `)
-    basic.pause(1000)
-    for (let index = 0; index < 15; index++) {
-        music.playTone(988, music.beat(BeatFraction.Half))
-        music.playTone(784, music.beat(BeatFraction.Half))
-        basic.showNumber(Pedestrian_Crossing_Time)
-        Pedestrian_Crossing_Time += -1
+    if (xyz == 0) {
+        basic.showLeds(`
+            . . # . .
+            . # # # .
+            # . # . #
+            . # . # .
+            # . . . #
+            `)
+        basic.pause(1000)
+        for (let index = 0; index <= 9; index++) {
+            if (xyz == 0) {
+                music.playTone(75 * index + 200, music.beat(BeatFraction.Half))
+                music.playTone(75 * index + 150, music.beat(BeatFraction.Half))
+                basic.showNumber(Pedestrian_Crossing_Time)
+                Pedestrian_Crossing_Time += -1
+            }
+        }
+        basic.showLeds(`
+            # . . . #
+            . # . # .
+            . . # . .
+            . # . # .
+            # . . . #
+            `)
+        music.playTone(698, music.beat(BeatFraction.Double))
+        Pedestrian_Crossing_Time = 9
+        if (xyz == 0) {
+            YELLOW()
+            basic.pause(3000)
+            RED()
+        }
     }
-    music.playTone(698, music.beat(BeatFraction.Whole))
-    Pedestrian_Crossing_Time = 15
-    basic.showLeds(`
-        # . . . #
-        . # . # .
-        . . # . .
-        . # . # .
-        # . . . #
-        `)
 }
 function YELLOW () {
     range = Strip.range(0, 1)
@@ -107,40 +130,32 @@ function YELLOW () {
 }
 let range: neopixel.Strip = null
 let Distance = 0
+let Random = 0
+let xyz = 0
 let Strip: neopixel.Strip = null
 let Pedestrian_Crossing_Time = 0
-let xyz = 1
-Pedestrian_Crossing_Time = 15
+Pedestrian_Crossing_Time = 9
 Strip = neopixel.create(DigitalPin.P16, 3, NeoPixelMode.RGB)
 Strip.setBrightness(20)
 radio.setGroup(177)
 basic.showIcon(IconNames.No)
 RED()
 basic.forever(function () {
-    for (let index = 0; index < 10; index++) {
-        Sonar()
-    }
+    Sonar()
     if (Distance > 4 && Distance < 6) {
         Vehicle()
     }
     if (input.buttonIsPressed(Button.A)) {
-        Pedestrian_Crossing()
-        basic.pause(3000)
         GREEN()
-        basic.pause(15000)
-        YELLOW()
-        basic.pause(4000)
-        RED()
+        Pedestrian_Crossing()
     }
     if (input.buttonIsPressed(Button.B)) {
         music.playTone(587, music.beat(BeatFraction.Quarter))
         music.playTone(698, music.beat(BeatFraction.Half))
-        Pedestrian_Crossing_VI()
-        basic.pause(3000)
         GREEN()
-        basic.pause(15000)
-        YELLOW()
-        basic.pause(4000)
-        RED()
+        Pedestrian_Crossing_VI()
+    }
+    if (Random == 7) {
+    	
     }
 })
