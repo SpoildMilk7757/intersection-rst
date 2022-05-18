@@ -30,7 +30,9 @@ function Pedestrian_Crossing () {
     }
 }
 radio.onReceivedNumber(function (receivedNumber) {
-    Random = receivedNumber
+    xyz = 1
+    Ambulance()
+    xyz = 0
 })
 function Sonar () {
     pins.digitalWritePin(DigitalPin.P1, 0)
@@ -93,10 +95,10 @@ function Pedestrian_Crossing_VI () {
             # . . . #
             `)
         basic.pause(1000)
-        for (let index = 0; index <= 9; index++) {
+        for (let index4 = 0; index4 <= 9; index4++) {
             if (xyz == 0) {
-                music.playTone(75 * index + 200, music.beat(BeatFraction.Half))
-                music.playTone(75 * index + 150, music.beat(BeatFraction.Half))
+                music.playTone(75 * index4 + 200, music.beat(BeatFraction.Half))
+                music.playTone(75 * index4 + 150, music.beat(BeatFraction.Half))
                 basic.showNumber(Pedestrian_Crossing_Time)
                 Pedestrian_Crossing_Time += -1
             }
@@ -127,7 +129,6 @@ function YELLOW () {
 }
 let range: neopixel.Strip = null
 let Distance = 0
-let Random = 0
 let xyz = 0
 let Strip: neopixel.Strip = null
 let Pedestrian_Crossing_Time = 0
@@ -139,22 +140,17 @@ basic.showIcon(IconNames.No)
 RED()
 basic.forever(function () {
     Sonar()
-    if (Distance > 4 && Distance < 6 && xyz == 0) {
+    if (Distance > 4 && Distance < 6) {
         Vehicle()
     }
-    if (input.buttonIsPressed(Button.B) && xyz == 0) {
+    if (xyz == 0 && input.buttonIsPressed(Button.A)) {
         GREEN()
         Pedestrian_Crossing()
     }
-    if (input.buttonIsPressed(Button.A) && xyz == 0) {
+    if (xyz == 0 && input.buttonIsPressed(Button.B)) {
         music.playTone(587, music.beat(BeatFraction.Quarter))
         music.playTone(698, music.beat(BeatFraction.Half))
         GREEN()
         Pedestrian_Crossing_VI()
-    }
-    if (Random == 7) {
-        xyz = 1
-        Ambulance()
-        xyz = 0
     }
 })
