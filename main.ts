@@ -31,9 +31,6 @@ function Pedestrian_Crossing () {
 }
 radio.onReceivedNumber(function (receivedNumber) {
     Random = receivedNumber
-    xyz = 1
-    Ambulance()
-    xyz = 0
 })
 function Sonar () {
     pins.digitalWritePin(DigitalPin.P1, 0)
@@ -142,20 +139,22 @@ basic.showIcon(IconNames.No)
 RED()
 basic.forever(function () {
     Sonar()
-    if (Distance > 4 && Distance < 6) {
+    if (Distance > 4 && Distance < 6 && xyz == 0) {
         Vehicle()
     }
-    if (input.buttonIsPressed(Button.A)) {
+    if (input.buttonIsPressed(Button.B) && xyz == 0) {
         GREEN()
         Pedestrian_Crossing()
     }
-    if (input.buttonIsPressed(Button.B)) {
+    if (input.buttonIsPressed(Button.A) && xyz == 0) {
         music.playTone(587, music.beat(BeatFraction.Quarter))
         music.playTone(698, music.beat(BeatFraction.Half))
         GREEN()
         Pedestrian_Crossing_VI()
     }
     if (Random == 7) {
-    	
+        xyz = 1
+        Ambulance()
+        xyz = 0
     }
 })
