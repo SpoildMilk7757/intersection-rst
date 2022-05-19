@@ -8,13 +8,14 @@ function Pedestrian_Crossing () {
             # . . . #
             `)
         basic.pause(1000)
-        for (let index = 0; index < 9; index++) {
+        for (let index = 0; index < 14; index++) {
             if (xyz == 0) {
                 basic.showNumber(Pedestrian_Crossing_Time)
+                basic.pause(500)
                 Pedestrian_Crossing_Time += -1
             }
         }
-        Pedestrian_Crossing_Time = 9
+        Pedestrian_Crossing_Time = 14
         basic.showLeds(`
             # . . . #
             . # . # .
@@ -30,9 +31,11 @@ function Pedestrian_Crossing () {
     }
 }
 radio.onReceivedNumber(function (receivedNumber) {
-    xyz = 1
-    Ambulance()
-    xyz = 0
+    if (receivedNumber == 7) {
+        xyz = 1
+        Ambulance()
+        xyz = 0
+    }
 })
 function Sonar () {
     pins.digitalWritePin(DigitalPin.P1, 0)
@@ -62,7 +65,7 @@ function Vehicle () {
     if (xyz == 0) {
         basic.showIcon(IconNames.No)
         GREEN()
-        for (let index = 0; index < 20; index++) {
+        for (let index = 0; index < 40; index++) {
             if (xyz == 0) {
                 basic.pause(500)
             }
@@ -95,10 +98,10 @@ function Pedestrian_Crossing_VI () {
             # . . . #
             `)
         basic.pause(1000)
-        for (let index4 = 0; index4 <= 9; index4++) {
+        for (let index4 = 0; index4 <= 14; index4++) {
             if (xyz == 0) {
-                music.playTone(75 * index4 + 200, music.beat(BeatFraction.Half))
-                music.playTone(75 * index4 + 150, music.beat(BeatFraction.Half))
+                music.playTone(80 * index4 + 200, music.beat(BeatFraction.Half))
+                music.playTone(80 * index4 + 150, music.beat(BeatFraction.Half))
                 basic.showNumber(Pedestrian_Crossing_Time)
                 Pedestrian_Crossing_Time += -1
             }
@@ -111,7 +114,7 @@ function Pedestrian_Crossing_VI () {
             # . . . #
             `)
         music.playTone(698, music.beat(BeatFraction.Double))
-        Pedestrian_Crossing_Time = 9
+        Pedestrian_Crossing_Time = 14
         if (xyz == 0) {
             YELLOW()
             basic.pause(3000)
@@ -127,30 +130,41 @@ function YELLOW () {
     range = Strip.range(2, 1)
     range.showColor(neopixel.colors(NeoPixelColors.Black))
 }
+let checks = 0
 let range: neopixel.Strip = null
-let Distance = 0
 let xyz = 0
 let Strip: neopixel.Strip = null
+let Distance = 0
 let Pedestrian_Crossing_Time = 0
-Pedestrian_Crossing_Time = 9
+Pedestrian_Crossing_Time = 14
+Distance = 20
 Strip = neopixel.create(DigitalPin.P16, 3, NeoPixelMode.RGB)
 Strip.setBrightness(20)
 radio.setGroup(177)
 basic.showIcon(IconNames.No)
 RED()
+let initialize = 1
 basic.forever(function () {
-    Sonar()
-    if (Distance > 4 && Distance < 6) {
-        Vehicle()
-    }
-    if (xyz == 0 && input.buttonIsPressed(Button.A)) {
-        GREEN()
-        Pedestrian_Crossing()
-    }
-    if (xyz == 0 && input.buttonIsPressed(Button.B)) {
-        music.playTone(587, music.beat(BeatFraction.Quarter))
-        music.playTone(698, music.beat(BeatFraction.Half))
-        GREEN()
-        Pedestrian_Crossing_VI()
+    if (initialize == 1) {
+        for (let index = 0; index < 4; index++) {
+            Sonar()
+            if (Distance > 4 && Distance < 6) {
+                checks += 1
+            }
+        }
+        if (checks == 4) {
+            Vehicle()
+        }
+        if (xyz == 0 && input.buttonIsPressed(Button.A)) {
+            GREEN()
+            Pedestrian_Crossing()
+        }
+        if (xyz == 0 && input.buttonIsPressed(Button.B)) {
+            music.playTone(587, music.beat(BeatFraction.Quarter))
+            music.playTone(698, music.beat(BeatFraction.Half))
+            GREEN()
+            Pedestrian_Crossing_VI()
+        }
+        checks = 0
     }
 })
