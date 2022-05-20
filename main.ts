@@ -8,11 +8,10 @@ function Pedestrian_Crossing () {
             # . . . #
             `)
         basic.pause(1000)
-        for (let index = 0; index < 14; index++) {
+        for (let index = 0; index <= 14; index++) {
             if (xyz == 0) {
-                basic.showNumber(Pedestrian_Crossing_Time)
+                basic.showNumber(14 - index)
                 basic.pause(500)
-                Pedestrian_Crossing_Time += -1
             }
         }
         Pedestrian_Crossing_Time = 14
@@ -102,8 +101,7 @@ function Pedestrian_Crossing_VI () {
             if (xyz == 0) {
                 music.playTone(80 * index4 + 200, music.beat(BeatFraction.Half))
                 music.playTone(80 * index4 + 150, music.beat(BeatFraction.Half))
-                basic.showNumber(Pedestrian_Crossing_Time)
-                Pedestrian_Crossing_Time += -1
+                basic.showNumber(14 - index4)
             }
         }
         basic.showLeds(`
@@ -132,11 +130,10 @@ function YELLOW () {
 }
 let checks = 0
 let range: neopixel.Strip = null
+let Pedestrian_Crossing_Time = 0
 let xyz = 0
 let Strip: neopixel.Strip = null
 let Distance = 0
-let Pedestrian_Crossing_Time = 0
-Pedestrian_Crossing_Time = 14
 Distance = 20
 Strip = neopixel.create(DigitalPin.P16, 3, NeoPixelMode.RGB)
 Strip.setBrightness(20)
