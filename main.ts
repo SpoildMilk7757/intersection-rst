@@ -53,7 +53,7 @@ function RED () {
     range.showColor(neopixel.colors(NeoPixelColors.Black))
 }
 function Ambulance () {
-    basic.pause(500)
+    basic.pause(2000)
     GREEN()
     basic.pause(10000)
     YELLOW()
